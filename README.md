@@ -19,7 +19,9 @@ git clone https://github.com/Brettles/short-sqs-lab
 ### SQS Standard Queue Creation
 First, we'll set up a SQS standard queue (next we'll look at FIFO). You can set this up manually in the console or using the CLI or you can use the CloudFormation template in `sqs-standard-queue-yaml`. This creates a SQS queue with the name "StandardQueue".
 
-Whether creating the queue manually or in CloudFormation, take a note of the name - you'll need that next.
+You may also run `create-standard-queue.sh` which calls CloudFormation from the commandline. You can then run `describe-standard-queue.sh` which will show the stack output once CloudFormation has completed creation.
+
+Whether creating the queue manually or in CloudFormation, take a note of the output with the queue URL - you'll need that next.
 
 ### Sending SQS Messages
 Edit `generate-sqs-data.py`. On line 10 you'll see `<SQS Queue URL>` - put the SQS queue URL here. You'll find it in the console or in the outputs section of the CloudFormation stack.
@@ -50,6 +52,8 @@ Create the FIFO queue manually or use the `sqs-fifo-queue.yaml` CloudFormation t
 
 If you are creating the queue manually, enabled "Content-Based Deduplication" which is where SQS uses a SHA-256 hash of the message contents to detect duplicate messages. If this is not enabled, your code must manually create a unqique identifier for each message.
 
+You may also run `create-fifo-queue.sh` which calls CloudFormation from the commandline. You can then run `describe-fifo-queue.sh` which will show the stack output once CloudFormation has completed creation.
+
 ### Sending FIFO SQS Messages
 Edit `generate-sqs-fifo-data.py` on line 10 and modify the SQS Queue URL. Save and run the script:
 ```
@@ -78,6 +82,8 @@ Whether you use SQS or Kinesis is up to you - but SQS is better suited to aynshc
 
 ### Kinesis Data Stream Creation
 Create the Kinesis stream manually or using the `kinesis-data-stream.yaml` CloudFormation template. This create a Kinesis Data Stream called "KinesisStream".
+
+You may also run `create-kinesis-stream.sh` which calls CloudFormation from the commandline. You can then run `describe-kinesis-stream.sh` which will show the stack output once CloudFormation has completed creation.
 
 ### Sending Kinesis Data
 You do not need to edit `generate-kinesis-data.py` as it already has the stream name in it on line 11 (unless you created a stream manually with a different name). As with the SQS script above, this creates random messages. Run it to begin sending messages:
@@ -125,7 +131,7 @@ As with the previous example, add the Kinesis stream as a trigger noting that yo
 Once done, run `generate-kinesis-data.py` again and observe the logs for this function in CloudWatch Logs. When finished, press ^C.
 
 ## Cleaning up
-If you used CloudFormation to set up the SQS queues and Kinesis data stream, delete the CloudFormation stacks. If you created them manually, delete them directly from the console.
+If you used CloudFormation to set up the SQS queues and Kinesis data stream, delete the CloudFormation stacks. If you created them manually, delete them directly from the console. If you used the shell scripts to run CloudFormation, just run `cleanup.sh` to remove the CloudFormation stacks.
 
 Delete the Lambda functions.
 
