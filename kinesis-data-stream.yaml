@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: >
+  Create a Kinesis data stream
+  
+Outputs:
+  KinesisStreamName:
+    Value: !Ref KinesisStream
+
+Resources: 
+  KinesisStream:
+    Type: AWS::Kinesis::Stream
+    Properties:
+      Name: KinesisStream
+      ShardCount: 1
+      
