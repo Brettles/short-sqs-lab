@@ -137,5 +137,7 @@ Delete the Lambda functions.
 
 Delete the IAM roles created by the Lambda console for SQS and Kinesis access.
 
+Delete the Cloud9 instance (if you created one).
+
 ## Summary
 What you have seen here are some simple examples of how to use SQS and Kinesis to distribute messages between application components; some options on how to run the code (standalone or in Lambda); and the IAM permissions required.
