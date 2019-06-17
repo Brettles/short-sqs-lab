@@ -1,5 +1,5 @@
 # Short SQS and Kinesis Lab
-This is a short AWS lab covering [SQS](https://aws.amazon.com/sqs/) messaging, [Kinesis](https://aws.amazon.com/kinesis/data-streams/) data streaming from "traditional" compute (i.e. a virtual machine somwehere) and then looking at how to process those SQS and Kinesis messages in [Lambda](https://aws.amazon.com/lambda/).
+This is a short AWS lab covering [SQS](https://aws.amazon.com/sqs/) messaging, [Kinesis](https://aws.amazon.com/kinesis/data-streams/) data streaming from "traditional" compute (i.e. a virtual machine somewhere) and then looking at how to process those SQS and Kinesis messages in [Lambda](https://aws.amazon.com/lambda/).
 
 ## Requirements
 You will need an AWS account to run this lab. You can run all of the commands from a Python-enabled virtual machine anywhere with appropriate IAM permissions (or roles if running within AWS) but to make things easier to demonstrated, we will show all of this using [Cloud9](https://aws.amazon.com/cloud9/).
@@ -14,17 +14,20 @@ If you choose not to use Cloud9 you will need to have a machine that runs Python
 To give you easier access to the files, inside your Cloud9 environment you can clone this repository:
 ```
 git clone https://github.com/Brettles/short-sqs-lab
+cd short-sqs-lab
 ```
 
 ### SQS Standard Queue Creation
-First, we'll set up a SQS standard queue (next we'll look at FIFO). You can set this up manually in the console or using the CLI or you can use the CloudFormation template in `sqs-standard-queue-yaml`. This creates a SQS queue with the name "StandardQueue".
+First, we'll set up a SQS standard queue (next we'll look at FIFO). You can set this up manually in the console or using the CLI or you can use the CloudFormation template in `sqs-standard-queue.yaml`. This creates a SQS queue with the name "StandardQueue".
 
-You may also run `create-standard-queue.sh` which calls CloudFormation from the commandline. You can then run `describe-standard-queue.sh` which will show the stack output once CloudFormation has completed creation.
+At the CLI, you can run CloudFormation using the instructions [in the documentation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-cli-creating-stack.html). Alternately, you can run `./create-standard-queue.sh` which calls CloudFormation using those same commands. You can then run `./describe-standard-queue.sh` which will show the stack output once CloudFormation has completed creation.
 
 Whether creating the queue manually or in CloudFormation, take a note of the output with the queue URL - you'll need that next.
 
 ### Sending SQS Messages
 Edit `generate-sqs-data.py`. On line 10 you'll see `<SQS Queue URL>` - put the SQS queue URL here. You'll find it in the console or in the outputs section of the CloudFormation stack.
+
+If you're using Cloud9 you can find the files in the navigation pane to the left of the screen and double-click on a file to edit it. If you're using your own host then use vi (my favourite) or nano to edit the file.
 
 Save the file and run it:
 ```
@@ -52,7 +55,7 @@ Create the FIFO queue manually or use the `sqs-fifo-queue.yaml` CloudFormation t
 
 If you are creating the queue manually, enabled "Content-Based Deduplication" which is where SQS uses a SHA-256 hash of the message contents to detect duplicate messages. If this is not enabled, your code must manually create a unqique identifier for each message.
 
-You may also run `create-fifo-queue.sh` which calls CloudFormation from the commandline. You can then run `describe-fifo-queue.sh` which will show the stack output once CloudFormation has completed creation.
+You may also run `./create-fifo-queue.sh` which calls CloudFormation on your behalf. You can then run `./describe-fifo-queue.sh` which will show the stack output once CloudFormation has completed creation.
 
 ### Sending FIFO SQS Messages
 Edit `generate-sqs-fifo-data.py` on line 10 and modify the SQS Queue URL. Save and run the script:
@@ -78,12 +81,12 @@ With Kinesis you have a message "producer" and a message "consumer" - much the s
 
 The other advantage of Kinesis is that the consumer can elect where to start in the message stream - either from "now" (which means only receiving new messages); from the start of the stream (reprocessing is back to the retention period (up to 7 days); or from a specific time in the stream.
 
-Whether you use SQS or Kinesis is up to you - but SQS is better suited to aynshcronous decoupling of application components whereas Kinesis is more for streaming of data.
+Whether you use SQS or Kinesis is up to you - but SQS is better suited to asynchronous decoupling of application components whereas Kinesis is more for streaming of data.
 
 ### Kinesis Data Stream Creation
-Create the Kinesis stream manually or using the `kinesis-data-stream.yaml` CloudFormation template. This create a Kinesis Data Stream called "KinesisStream".
+Create the Kinesis stream manually or using the `kinesis-data-stream.yaml` CloudFormation template. This creates a Kinesis Data Stream called "KinesisStream".
 
-You may also run `create-kinesis-stream.sh` which calls CloudFormation from the commandline. You can then run `describe-kinesis-stream.sh` which will show the stack output once CloudFormation has completed creation.
+You may also run `./create-kinesis-stream.sh` which calls CloudFormation for you. You can then run `./describe-kinesis-stream.sh` which will show the stack output once CloudFormation has completed creation.
 
 ### Sending Kinesis Data
 You do not need to edit `generate-kinesis-data.py` as it already has the stream name in it on line 11 (unless you created a stream manually with a different name). As with the SQS script above, this creates random messages. Run it to begin sending messages:
@@ -131,9 +134,11 @@ As with the previous example, add the Kinesis stream as a trigger noting that yo
 Once done, run `generate-kinesis-data.py` again and observe the logs for this function in CloudWatch Logs. When finished, press ^C.
 
 ## Cleaning up
-If you used CloudFormation to set up the SQS queues and Kinesis data stream, delete the CloudFormation stacks. If you created them manually, delete them directly from the console. If you used the shell scripts to run CloudFormation, just run `cleanup.sh` to remove the CloudFormation stacks.
+If you used CloudFormation to set up the SQS queues and Kinesis data stream, delete the CloudFormation stacks. If you created them manually, delete them directly from the console. If you used the shell scripts to run CloudFormation, just run `./cleanup.sh` to remove the CloudFormation stacks.
 
 Delete the Lambda functions.
+
+Delete the CloudWatch logs that were created by the Lambda functions
 
 Delete the IAM roles created by the Lambda console for SQS and Kinesis access.
 
