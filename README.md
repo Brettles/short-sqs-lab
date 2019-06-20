@@ -63,6 +63,8 @@ Edit `generate-sqs-fifo-data.py` on line 10 and modify the SQS Queue URL. Save a
 ./generate-sqs-fifo-data.py
 ```
 
+Note that the code is slightly different - when a message is sent to a FIFO queue you must specify a group name. In this example it's set to "Group1". The message receiver can optional choose which group to receive messages from. If you do not specify a group then messages are received from all groups.
+
 ### Receiving FIFO SQS Messages
 Edit `get-sqs-data.py` again and update it with the FIFO queue URL. Note that the receiving code is the same for standard and FIFO queues.
 

@@ -32,9 +32,9 @@ while True:
 
     Counter = 0
     while True:
-        Data = Kinesis.get_records(ShardIterator = Record['NextShardIterator'], Limit=20)
+        Data = Kinesis.get_records(ShardIterator = Record['NextShardIterator'], Limit=40)
         if len(Data['Records']) > 0: break
-        time.sleep(1)
+        time.sleep(1) # Otherwise we'll exceed the rate limit for the Kinesis API
         Counter += 1
         if Counter > 250: # The shard iterator has a timeout of 300 seconds
             data['Ignore'] = True # So we don't throw an error below

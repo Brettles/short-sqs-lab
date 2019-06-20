@@ -27,12 +27,8 @@ while True:
         
         Data = {}
         Data['Id']      = UUID
+        Data['Msg']     = str(Counter)
         Data['Field01'] = ''.join(random.choice(SourceData) for _ in range(16))
-        Data['Field02'] = ''.join(random.choice(SourceData) for _ in range(16))
-        Data['Field03'] = ''.join(random.choice(SourceData) for _ in range(16))
-        Data['Field04'] = ''.join(random.choice(SourceData) for _ in range(16))
-        Data['Field05'] = ''.join(random.choice(SourceData) for _ in range(16))
-        Data['Field06'] = ''.join(random.choice(SourceData) for _ in range(16))
         
         print('Sending message %d (%s)' % (Counter,UUID))
        
