@@ -83,7 +83,17 @@ With Kinesis you have a message "producer" and a message "consumer" - much the s
 
 The other advantage of Kinesis is that the consumer can elect where to start in the message stream - either from "now" (which means only receiving new messages); from the start of the stream (reprocessing is back to the retention period (up to 7 days); or from a specific time in the stream.
 
+Scalability is an interesting differentiator here. Both SQS and Kinesis have limits on the number of API calls that can be made in any given timeframe for any client. So if you send or poll too often you may get rate-limited or see messages returned from the service telling you that you're exceeding the limits.
+
+After that, SQS has a much simpler scaling model - which is how many messages you can send and receive (to and from multiple clients). That's it! The service automatically scales to meet your demands.
+
+Kinesis is a bit more complex. For each shard in the message stream you can only send a certain amount of data; and only receive a certain (different) amount. If you want to exceed those limits then you need increase the number of shards you have in your stream. That's pretty easy - but it is a manual (in terms of the service - of course it can be automated) process that the service doesn't do for you. So keep an eye on your data rates on a stream and increase (or decrease) the number of shards appropriately.
+
 Whether you use SQS or Kinesis is up to you - but SQS is better suited to asynchronous decoupling of application components whereas Kinesis is more for streaming of data.
+
+References:
+[SQS service limits](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-cli-creating-stack.html)
+[Kinesis service limits](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-cli-creating-stack.html)
 
 ### Kinesis Data Stream Creation
 Create the Kinesis stream manually or using the `kinesis-data-stream.yaml` CloudFormation template. This creates a Kinesis Data Stream called "KinesisStream".
