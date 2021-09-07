@@ -10,6 +10,12 @@ Create a Cloud9 environment in the AWS console in the region of your choice. Use
 
 If you choose not to use Cloud9 you will need to have a machine that runs Python and you will need to have permissions to use CloudFormation, SQS, Kinesis, Lambda, CloudWatch Logs and IAM. You could use locally installed credentials or use an IAM role attached to an instance in AWS.
 
+### Install Boto3
+The examples in this lab use the [Boto3 SDK](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) so we need to install it.
+```
+sudo pip install boto3
+```
+
 ### Clone this repo
 To give you easier access to the files, inside your Cloud9 environment you can clone this repository:
 ```
